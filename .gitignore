@@ -1,0 +1,16 @@
+# Abaikan Config Asli (Berisi Token)
+config.py
+
+# Abaikan Database & GeoIP
+*.db
+*.mmdb
+
+# Abaikan Hasil Scan (File TXT)
+*.txt
+output/
+
+# Abaikan Folder Sampah Python
+__pycache__/
+*.pyc
+.env
+venv/

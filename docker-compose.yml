@@ -1,0 +1,34 @@
+services:
+  proxy_checker_bot:
+    build: .
+    container_name: wxd_proxy_bot
+    restart: always
+    
+    # --- 1. FITUR BARU: PERSISTENCE (AGAR DATA ABADI) ---
+    # Memetakan folder VPS saat ini (.) ke dalam folder /app di container.
+    # Hasilnya: proxies.db dan file txt tersimpan di VPS, bukan di container.
+    volumes:
+      - .:/app
+    
+    # Agar output log Python muncul realtime di terminal
+    environment:
+      - PYTHONUNBUFFERED=1
+
+    # --- 2. FITUR KEAMANAN: PROTEKSI FREQTRADE ---
+    # Membatasi bot ini agar tidak serakah memakan CPU/RAM.
+    deploy:
+      resources:
+        limits:
+          cpus: '0.80'     # Maksimal pakai 80% dari 1 Core CPU
+          memory: 4G     # Maksimal pakai 4GB
+        reservations:
+          cpus: '0.10'     # Garansi minimal 10% CPU
+          memory: 128M     # Garansi minimal 128MB RAM
+    
+    # --- 3. FITUR KEAMANAN: HEMAT STORAGE ---
+    # Membatasi ukuran log agar disk VPS tidak penuh (Log Rotation).
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"    # Maksimal 1 file log = 10MB
+        max-file: "3"      # Maksimal simpan 3 file log terakhir
